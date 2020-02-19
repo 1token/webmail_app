@@ -18,6 +18,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   AuthMode _authMode = AuthMode.Login;
+  bool _rememberMe = false;
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -34,6 +35,8 @@ class _AuthScreenState extends State<AuthScreen> {
             child: _MainView(
               authMode: _authMode,
               onAuthModeTap: _switchAuthMode,
+              rememberMe: _rememberMe,
+              onRememberMeTap: _switchRememberMe,
               usernameController: _usernameController,
               passwordController: _passwordController,
             ),
@@ -57,6 +60,12 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
+  void _switchRememberMe() {
+    setState(() {
+      _rememberMe = !_rememberMe;
+    });
+  }
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -70,12 +79,16 @@ class _MainView extends StatefulWidget {
     Key key,
     @required this.authMode,
     @required this.onAuthModeTap,
+    @required this.rememberMe,
+    @required this.onRememberMeTap,
     this.usernameController,
     this.passwordController,
   }) : super(key: key);
 
   final AuthMode authMode;
   final VoidCallback onAuthModeTap;
+  final bool rememberMe;
+  final VoidCallback onRememberMeTap;
   final TextEditingController usernameController;
   final TextEditingController passwordController;
 
@@ -134,6 +147,8 @@ class __MainViewState extends State<_MainView> {
         _LoginButton(
           maxWidth: desktopMaxWidth,
           onTap: _submit,
+          rememberMe: widget.rememberMe,
+          onRememberMeTap: widget.onRememberMeTap,
         ),
         if (widget.authMode == AuthMode.Login)
           _GoogleLoginButton(
@@ -470,10 +485,14 @@ class _LoginButton extends StatelessWidget {
     Key key,
     @required this.onTap,
     this.maxWidth,
+    this.rememberMe,
+    this.onRememberMeTap,
   }) : super(key: key);
 
   final double maxWidth;
   final VoidCallback onTap;
+  final bool rememberMe;
+  final VoidCallback onRememberMeTap;
 
   @override
   Widget build(BuildContext context) {
@@ -484,7 +503,12 @@ class _LoginButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 30),
         child: Row(
           children: [
-            Icon(Icons.check_circle_outline, color: StarterColors.buttonColor),
+            IconButton(
+              icon: new Icon(
+                  rememberMe ? Icons.check_circle : Icons.check_circle_outline,
+                  color: StarterColors.buttonColor),
+              onPressed: onRememberMeTap,
+            ),
             const SizedBox(width: 12),
             Text(GalleryLocalizations.of(context).rallyLoginRememberMe),
             const Expanded(child: SizedBox.shrink()),
