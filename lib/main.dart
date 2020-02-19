@@ -1,7 +1,16 @@
 import 'dart:convert' show json;
 
-import "package:http/http.dart" as http;
 import 'package:flutter/material.dart';
+import 'package:webmail_app/utils/gallery_options.dart';
+import 'package:webmail_app/utils/gallery_localizations.dart';
+import 'package:webmail_app/utils/focus_traversal_policy.dart';
+import 'package:webmail_app/screens/home.dart';
+import 'package:webmail_app/screens/login.dart';
+
+import 'package:webmail_app/colors.dart';
+
+/*
+import "package:http/http.dart" as http;
 import 'package:google_sign_in/google_sign_in.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -10,10 +19,38 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
     'https://www.googleapis.com/auth/contacts.readonly',
   ],
 );
+*/
 
 void main() => runApp(WebmailApp());
 
 class WebmailApp extends StatelessWidget {
+  const WebmailApp({Key key, this.navigatorKey}) : super(key: key);
+
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      navigatorKey: navigatorKey,
+      title: 'Starter',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch:
+        MaterialColor(0xFF83A4D6, StarterColors.matColor),
+      ),
+      localizationsDelegates: GalleryLocalizations.localizationsDelegates,
+      supportedLocales: GalleryLocalizations.supportedLocales,
+      locale: Locale('sk', 'SK'),
+      home: HomePage(),
+      initialRoute: '/login',
+      routes: <String, WidgetBuilder>{
+        '/login': (context) => LoginPage(),
+      },
+    );
+  }
+}
+
+/*class WebmailApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -168,4 +205,4 @@ class _MyHomePageState extends State<MyHomePage> {
           child: _buildBody(),
         ));
   }
-}
+}*/
