@@ -65,7 +65,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 }
 
-class _MainView extends StatelessWidget {
+class _MainView extends StatefulWidget {
   const _MainView({
     Key key,
     @required this.authMode,
@@ -79,6 +79,13 @@ class _MainView extends StatelessWidget {
   final TextEditingController usernameController;
   final TextEditingController passwordController;
 
+  @override
+  __MainViewState createState() => __MainViewState();
+}
+
+class __MainViewState extends State<_MainView> {
+  final GlobalKey<FormState> _formKey = GlobalKey();
+
   void _login(BuildContext context) {
     Navigator.pop(context);
   }
@@ -88,33 +95,47 @@ class _MainView extends StatelessWidget {
     final isDesktop = isDisplayDesktop(context);
     List<Widget> listViewChildren;
 
+    Future<void> _submit() async {
+      if (!_formKey.currentState.validate()) {
+        // Invalid!
+        return;
+      }
+    }
+
     if (isDesktop) {
       final desktopMaxWidth = 400.0 + 100.0 * (cappedTextScale(context) - 1);
       listViewChildren = [
-        _UsernameInput(
-          maxWidth: desktopMaxWidth,
-          usernameController: usernameController,
-        ),
-        const SizedBox(height: 12),
-        _PasswordInput(
-          maxWidth: desktopMaxWidth,
-          passwordController: passwordController,
-        ),
-        if (authMode == AuthMode.Signup) ...[
-          const SizedBox(height: 12),
-          _ConfirmPasswordInput(
-            authMode: authMode,
-            maxWidth: desktopMaxWidth,
-            passwordController: passwordController,
-          )
-        ],
+        Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  _UsernameInput(
+                    authMode: widget.authMode,
+                    maxWidth: desktopMaxWidth,
+                    usernameController: widget.usernameController,
+                  ),
+                  const SizedBox(height: 12),
+                  _PasswordInput(
+                    maxWidth: desktopMaxWidth,
+                    passwordController: widget.passwordController,
+                  ),
+                  if (widget.authMode == AuthMode.Signup) ...[
+                    const SizedBox(height: 12),
+                    _ConfirmPasswordInput(
+                      authMode: widget.authMode,
+                      maxWidth: desktopMaxWidth,
+                      passwordController: widget.passwordController,
+                    )
+                  ],
+                ],
+              ),
+            )),
         _LoginButton(
           maxWidth: desktopMaxWidth,
-          onTap: () {
-            _login(context);
-          },
+          onTap: _submit,
         ),
-        if (authMode == AuthMode.Login)
+        if (widget.authMode == AuthMode.Login)
           _GoogleLoginButton(
             maxWidth: desktopMaxWidth,
             onTap: () {
@@ -124,26 +145,33 @@ class _MainView extends StatelessWidget {
       ];
     } else {
       listViewChildren = [
-        _UsernameInput(
-          usernameController: usernameController,
-        ),
-        const SizedBox(height: 12),
-        _PasswordInput(
-          passwordController: passwordController,
-        ),
-        if (authMode == AuthMode.Signup) ...[
-          const SizedBox(height: 12),
-          _ConfirmPasswordInput(
-            authMode: authMode,
-            passwordController: passwordController,
-          )
-        ],
+        Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  _UsernameInput(
+                    authMode: widget.authMode,
+                    usernameController: widget.usernameController,
+                  ),
+                  const SizedBox(height: 12),
+                  _PasswordInput(
+                    passwordController: widget.passwordController,
+                  ),
+                  if (widget.authMode == AuthMode.Signup) ...[
+                    const SizedBox(height: 12),
+                    _ConfirmPasswordInput(
+                      authMode: widget.authMode,
+                      passwordController: widget.passwordController,
+                    )
+                  ],
+                ],
+              ),
+            )),
         _ThumbButton(
-          onTap: () {
-            _login(context);
-          },
+          onTap: _submit,
         ),
-        if (authMode == AuthMode.Login)
+        if (widget.authMode == AuthMode.Login)
           _GoogleLoginButton(
             onTap: () {
               _login(context);
@@ -155,8 +183,8 @@ class _MainView extends StatelessWidget {
     return Column(
       children: [
         _TopBar(
-          authMode: authMode,
-          onAuthModeTap: onAuthModeTap,
+          authMode: widget.authMode,
+          onAuthModeTap: widget.onAuthModeTap,
         ),
         // if (!isDesktop) const SizedBox(height: 8),
         Expanded(
@@ -265,10 +293,12 @@ class _SmallLogo extends StatelessWidget {
 class _UsernameInput extends StatelessWidget {
   const _UsernameInput({
     Key key,
+    this.authMode,
     this.maxWidth,
     this.usernameController,
   }) : super(key: key);
 
+  final AuthMode authMode;
   final double maxWidth;
   final TextEditingController usernameController;
 
@@ -278,11 +308,21 @@ class _UsernameInput extends StatelessWidget {
       alignment: Alignment.center,
       child: Container(
         constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
-        child: TextField(
+        child: TextFormField(
+          autofocus: true,
           controller: usernameController,
           decoration: InputDecoration(
             labelText: GalleryLocalizations.of(context).rallyLoginUsername,
           ),
+          validator: (value) {
+            if (value.isEmpty || !value.contains('@')) {
+              return authMode == AuthMode.Login
+                  ? GalleryLocalizations.of(context)
+                      .demoTextFieldSigninEmailAddress
+                  : GalleryLocalizations.of(context)
+                      .demoTextFieldSignupEmailAddress;
+            }
+          },
         ),
       ),
     );
@@ -305,11 +345,17 @@ class _PasswordInput extends StatelessWidget {
       alignment: Alignment.center,
       child: Container(
         constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
-        child: TextField(
+        child: TextFormField(
           controller: passwordController,
           decoration: InputDecoration(
             labelText: GalleryLocalizations.of(context).rallyLoginPassword,
           ),
+          validator: (value) {
+            if (value.isEmpty || value.length < 6) {
+              return GalleryLocalizations.of(context)
+                  .demoTextFieldPasswordMustBeLonger;
+            }
+          },
           obscureText: true,
         ),
       ),
@@ -336,7 +382,6 @@ class _ConfirmPasswordInput extends StatelessWidget {
       child: Container(
         constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
         child: TextFormField(
-          controller: passwordController,
           decoration: InputDecoration(
             labelText:
                 GalleryLocalizations.of(context).rallyLoginConfirmPassword,
@@ -345,7 +390,8 @@ class _ConfirmPasswordInput extends StatelessWidget {
           validator: authMode == AuthMode.Signup
               ? (value) {
                   if (value != passwordController.text) {
-                    return 'Passwords do not match!';
+                    return GalleryLocalizations.of(context)
+                        .demoTextFieldPasswordsDoNotMatch;
                   }
                 }
               : null,

@@ -827,10 +827,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "demoTextFieldOnlyAlphabeticalChars":
             MessageLookupByLibrary.simpleMessage(
                 "Please enter only alphabetical characters."),
+    "demoTextFieldSigninEmailAddress":
+    MessageLookupByLibrary.simpleMessage(
+        "Enter your email address"),
+    "demoTextFieldSignupEmailAddress":
+    MessageLookupByLibrary.simpleMessage(
+        "Enter a new email address to create account"),
         "demoTextFieldPassword":
             MessageLookupByLibrary.simpleMessage("Password*"),
-        "demoTextFieldPasswordsDoNotMatch":
-            MessageLookupByLibrary.simpleMessage("The passwords don\'t match"),
+    "demoTextFieldPasswordsDoNotMatch":
+    MessageLookupByLibrary.simpleMessage("The passwords don\'t match"),
+    "demoTextFieldPasswordMustBeLonger":
+    MessageLookupByLibrary.simpleMessage("Password must be longer than 6 characters"),
         "demoTextFieldPhoneNumber":
             MessageLookupByLibrary.simpleMessage("Phone number*"),
         "demoTextFieldRequiredField":

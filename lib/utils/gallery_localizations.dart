@@ -3050,6 +3050,20 @@ class GalleryLocalizations {
         desc: r'Error that shows if non-alphabetical characters are given.');
   }
 
+  String get demoTextFieldSigninEmailAddress {
+    return Intl.message('Enter your email address',
+        locale: _localeName,
+        name: 'demoTextFieldSigninEmailAddress',
+        desc: r'Error that shows if non-email address is given.');
+  }
+
+  String get demoTextFieldSignupEmailAddress {
+    return Intl.message('Enter a new email address to create account',
+        locale: _localeName,
+        name: 'demoTextFieldSignupEmailAddress',
+        desc: r'Error that shows if non-email address is given to create account.');
+  }
+
   String get demoTextFieldPassword {
     return Intl.message('Password*',
         locale: _localeName,
@@ -3064,6 +3078,14 @@ class GalleryLocalizations {
         name: 'demoTextFieldPasswordsDoNotMatch',
         desc:
         r'Error that shows up, if the re-typed password does not match the already given password.');
+  }
+
+  String get demoTextFieldPasswordMustBeLonger {
+    return Intl.message('Password must be longer than 6 characters',
+        locale: _localeName,
+        name: 'demoTextFieldPasswordMustBeLonger',
+        desc:
+        r'Error that shows up, if the password is not longer than 6 characters.');
   }
 
   String get demoTextFieldPhoneNumber {

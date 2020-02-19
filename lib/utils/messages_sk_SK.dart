@@ -827,10 +827,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "demoTextFieldOnlyAlphabeticalChars":
             MessageLookupByLibrary.simpleMessage(
                 "Please enter only alphabetical characters."),
+    "demoTextFieldSigninEmailAddress":
+    MessageLookupByLibrary.simpleMessage(
+        "Zadajte vašu emailovú adresu"),
+    "demoTextFieldSignupEmailAddress":
+    MessageLookupByLibrary.simpleMessage(
+        "Zadajte novú emailovú adresu cez ktorú sa budete prihlasovať"),
         "demoTextFieldPassword":
             MessageLookupByLibrary.simpleMessage("Password*"),
-        "demoTextFieldPasswordsDoNotMatch":
-            MessageLookupByLibrary.simpleMessage("The passwords don\'t match"),
+    "demoTextFieldPasswordsDoNotMatch":
+    MessageLookupByLibrary.simpleMessage("Heslá sa nezhodujú"),
+    "demoTextFieldPasswordMustBeLonger":
+    MessageLookupByLibrary.simpleMessage("Heslo musí byť dlhé aspoň 6 znakov"),
         "demoTextFieldPhoneNumber":
             MessageLookupByLibrary.simpleMessage("Phone number*"),
         "demoTextFieldRequiredField":
