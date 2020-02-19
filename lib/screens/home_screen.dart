@@ -7,8 +7,8 @@ import 'package:webmail_app/widgets/home_app_bar.dart';
 
 const drawerDesktopWidth = 200.0;
 
-class HomePage extends StatelessWidget {
-  const HomePage({
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({
     Key key,
     this.firstFocusNode,
     this.lastFocusNode,

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:webmail_app/utils/gallery_options.dart';
 import 'package:webmail_app/utils/gallery_localizations.dart';
 import 'package:webmail_app/utils/focus_traversal_policy.dart';
-import 'package:webmail_app/screens/home.dart';
-import 'package:webmail_app/screens/login.dart';
+import 'package:webmail_app/screens/home_screen.dart';
+import 'package:webmail_app/screens/auth_screen.dart';
 
 import 'package:webmail_app/colors.dart';
 
@@ -41,10 +41,10 @@ class WebmailApp extends StatelessWidget {
       localizationsDelegates: GalleryLocalizations.localizationsDelegates,
       supportedLocales: GalleryLocalizations.supportedLocales,
       locale: Locale('sk', 'SK'),
-      home: HomePage(),
+      home: HomeScreen(),
       initialRoute: '/login',
       routes: <String, WidgetBuilder>{
-        '/login': (context) => LoginPage(),
+        '/login': (context) => AuthScreen(),
       },
     );
   }

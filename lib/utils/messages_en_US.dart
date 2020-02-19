@@ -1027,12 +1027,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "rallyLoginLabelLogin": MessageLookupByLibrary.simpleMessage("Login"),
         "rallyLoginLoginToRally":
             MessageLookupByLibrary.simpleMessage("Login to Rally"),
-        "rallyLoginNoAccount":
-            MessageLookupByLibrary.simpleMessage("Don\'t have an account?"),
-        "rallyLoginPassword": MessageLookupByLibrary.simpleMessage("Password"),
+    "rallyLoginNoAccount":
+    MessageLookupByLibrary.simpleMessage("Don\'t have an account?"),
+    "rallyLoginHaveAccount":
+    MessageLookupByLibrary.simpleMessage("Have an account?"),
+    "rallyLoginPassword": MessageLookupByLibrary.simpleMessage("Password"),
+    "rallyLoginConfirmPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),
         "rallyLoginRememberMe":
             MessageLookupByLibrary.simpleMessage("Remember Me"),
-        "rallyLoginSignUp": MessageLookupByLibrary.simpleMessage("SIGN UP"),
+    "rallyLoginSignUp": MessageLookupByLibrary.simpleMessage("SIGN UP"),
+    "rallyLoginSignIn": MessageLookupByLibrary.simpleMessage("SIGN IN"),
         "rallyLoginUsername": MessageLookupByLibrary.simpleMessage("Username"),
         "rallySeeAll": MessageLookupByLibrary.simpleMessage("SEE ALL"),
         "rallySeeAllAccounts":

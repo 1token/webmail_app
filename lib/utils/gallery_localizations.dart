@@ -3992,11 +3992,25 @@ class GalleryLocalizations {
         desc: r'Prompt for signing up for an account.');
   }
 
+  String get rallyLoginHaveAccount {
+    return Intl.message('Have an account?',
+        locale: _localeName,
+        name: 'rallyLoginHaveAccount',
+        desc: r'Prompt for signing in an account.');
+  }
+
   String get rallyLoginPassword {
     return Intl.message('Password',
         locale: _localeName,
         name: 'rallyLoginPassword',
         desc: r'The password field in an login form.');
+  }
+
+  String get rallyLoginConfirmPassword {
+    return Intl.message('Confirm Password',
+        locale: _localeName,
+        name: 'rallyLoginConfirmPassword',
+        desc: r'The confirm password field in an login form.');
   }
 
   String get rallyLoginRememberMe {
@@ -4011,6 +4025,13 @@ class GalleryLocalizations {
         locale: _localeName,
         name: 'rallyLoginSignUp',
         desc: r'Button text to sign up for an account.');
+  }
+
+  String get rallyLoginSignIn {
+    return Intl.message('Sign in',
+        locale: _localeName,
+        name: 'rallyLoginSignIn',
+        desc: r'Button text to sign in for an account.');
   }
 
   String get rallyLoginUsername {

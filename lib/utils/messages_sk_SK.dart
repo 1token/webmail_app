@@ -1027,12 +1027,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "rallyLoginLabelLogin": MessageLookupByLibrary.simpleMessage("Login"),
         "rallyLoginLoginToRally":
             MessageLookupByLibrary.simpleMessage("Login to Rally"),
-        "rallyLoginNoAccount":
-            MessageLookupByLibrary.simpleMessage("Nemáte konto?"),
-        "rallyLoginPassword": MessageLookupByLibrary.simpleMessage("Heslo"),
+    "rallyLoginNoAccount":
+    MessageLookupByLibrary.simpleMessage("Nemáte konto?"),
+    "rallyLoginHaveAccount":
+    MessageLookupByLibrary.simpleMessage("Už máte konto?"),
+    "rallyLoginPassword": MessageLookupByLibrary.simpleMessage("Heslo"),
+    "rallyLoginConfirmPassword": MessageLookupByLibrary.simpleMessage("Potvrdiť heslo"),
         "rallyLoginRememberMe":
             MessageLookupByLibrary.simpleMessage("Zapamätať prihlásenie"),
-        "rallyLoginSignUp": MessageLookupByLibrary.simpleMessage("Vytvoriť nové konto"),
+    "rallyLoginSignUp": MessageLookupByLibrary.simpleMessage("Vytvoriť nové konto"),
+    "rallyLoginSignIn": MessageLookupByLibrary.simpleMessage("Prihlásiť sa"),
         "rallyLoginUsername": MessageLookupByLibrary.simpleMessage("Užívateľ"),
         "rallySeeAll": MessageLookupByLibrary.simpleMessage("SEE ALL"),
         "rallySeeAllAccounts":

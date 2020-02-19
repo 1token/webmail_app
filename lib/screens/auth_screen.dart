@@ -9,12 +9,16 @@ import 'package:webmail_app/utils/adaptive.dart';
 import 'package:webmail_app/utils/text_scale.dart';
 import 'package:webmail_app/utils/focus_traversal_policy.dart';
 
-class LoginPage extends StatefulWidget {
+enum AuthMode { Signup, Login }
+
+class AuthScreen extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _AuthScreenState createState() => _AuthScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _AuthScreenState extends State<AuthScreen> {
+  AuthMode _authMode = AuthMode.Login;
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -28,6 +32,8 @@ class _LoginPageState extends State<LoginPage> {
         child: Scaffold(
           body: SafeArea(
             child: _MainView(
+              authMode: _authMode,
+              onAuthModeTap: _switchAuthMode,
               usernameController: _usernameController,
               passwordController: _passwordController,
             ),
@@ -35,6 +41,20 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void _switchAuthMode() {
+    if (_authMode == AuthMode.Login) {
+      setState(() {
+        _authMode = AuthMode.Signup;
+      });
+      // _controller.forward();
+    } else {
+      setState(() {
+        _authMode = AuthMode.Login;
+      });
+      // _controller.reverse();
+    }
   }
 
   @override
@@ -48,10 +68,14 @@ class _LoginPageState extends State<LoginPage> {
 class _MainView extends StatelessWidget {
   const _MainView({
     Key key,
+    @required this.authMode,
+    @required this.onAuthModeTap,
     this.usernameController,
     this.passwordController,
   }) : super(key: key);
 
+  final AuthMode authMode;
+  final VoidCallback onAuthModeTap;
   final TextEditingController usernameController;
   final TextEditingController passwordController;
 
@@ -76,22 +100,30 @@ class _MainView extends StatelessWidget {
           maxWidth: desktopMaxWidth,
           passwordController: passwordController,
         ),
+        if (authMode == AuthMode.Signup) ...[
+          const SizedBox(height: 12),
+          _ConfirmPasswordInput(
+            authMode: authMode,
+            maxWidth: desktopMaxWidth,
+            passwordController: passwordController,
+          )
+        ],
         _LoginButton(
           maxWidth: desktopMaxWidth,
           onTap: () {
             _login(context);
           },
         ),
-        _GoogleLoginButton(
-          maxWidth: desktopMaxWidth,
-          onTap: () {
-            _login(context);
-          },
-        ),
+        if (authMode == AuthMode.Login)
+          _GoogleLoginButton(
+            maxWidth: desktopMaxWidth,
+            onTap: () {
+              _login(context);
+            },
+          ),
       ];
     } else {
       listViewChildren = [
-        // _SmallLogo(),
         _UsernameInput(
           usernameController: usernameController,
         ),
@@ -99,22 +131,33 @@ class _MainView extends StatelessWidget {
         _PasswordInput(
           passwordController: passwordController,
         ),
+        if (authMode == AuthMode.Signup) ...[
+          const SizedBox(height: 12),
+          _ConfirmPasswordInput(
+            authMode: authMode,
+            passwordController: passwordController,
+          )
+        ],
         _ThumbButton(
           onTap: () {
             _login(context);
           },
         ),
-        _GoogleLoginButton(
+        if (authMode == AuthMode.Login)
+          _GoogleLoginButton(
             onTap: () {
               _login(context);
             },
-        ),
+          ),
       ];
     }
 
     return Column(
       children: [
-        _TopBar(),
+        _TopBar(
+          authMode: authMode,
+          onAuthModeTap: onAuthModeTap,
+        ),
         // if (!isDesktop) const SizedBox(height: 8),
         Expanded(
           child: Align(
@@ -134,7 +177,12 @@ class _MainView extends StatelessWidget {
 class _TopBar extends StatelessWidget {
   const _TopBar({
     Key key,
+    @required this.authMode,
+    @required this.onAuthModeTap,
   }) : super(key: key);
+
+  final AuthMode authMode;
+  final VoidCallback onAuthModeTap;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +193,8 @@ class _TopBar extends StatelessWidget {
       margin: const EdgeInsets.only(top: 8, bottom: 8),
       padding: EdgeInsets.symmetric(horizontal: 30),
       child: Wrap(
-        alignment: isDesktop ? WrapAlignment.spaceBetween : WrapAlignment.spaceAround,
+        alignment:
+            isDesktop ? WrapAlignment.spaceBetween : WrapAlignment.spaceAround,
         children: [
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -172,12 +221,17 @@ class _TopBar extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                GalleryLocalizations.of(context).rallyLoginNoAccount,
+                authMode == AuthMode.Login
+                    ? GalleryLocalizations.of(context).rallyLoginNoAccount
+                    : GalleryLocalizations.of(context).rallyLoginHaveAccount,
                 style: Theme.of(context).textTheme.subhead,
               ),
               spacing,
               _BorderButton(
-                text: GalleryLocalizations.of(context).rallyLoginSignUp,
+                text: authMode == AuthMode.Login
+                    ? GalleryLocalizations.of(context).rallyLoginSignUp
+                    : GalleryLocalizations.of(context).rallyLoginSignIn,
+                onTap: onAuthModeTap,
               ),
             ],
           ),
@@ -257,6 +311,44 @@ class _PasswordInput extends StatelessWidget {
             labelText: GalleryLocalizations.of(context).rallyLoginPassword,
           ),
           obscureText: true,
+        ),
+      ),
+    );
+  }
+}
+
+class _ConfirmPasswordInput extends StatelessWidget {
+  const _ConfirmPasswordInput({
+    Key key,
+    this.authMode,
+    this.maxWidth,
+    this.passwordController,
+  }) : super(key: key);
+
+  final AuthMode authMode;
+  final double maxWidth;
+  final TextEditingController passwordController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
+        child: TextFormField(
+          controller: passwordController,
+          decoration: InputDecoration(
+            labelText:
+                GalleryLocalizations.of(context).rallyLoginConfirmPassword,
+          ),
+          obscureText: true,
+          validator: authMode == AuthMode.Signup
+              ? (value) {
+                  if (value != passwordController.text) {
+                    return 'Passwords do not match!';
+                  }
+                }
+              : null,
         ),
       ),
     );
@@ -390,9 +482,11 @@ class _GoogleLoginButton extends StatelessWidget {
 }
 
 class _BorderButton extends StatelessWidget {
-  const _BorderButton({Key key, @required this.text}) : super(key: key);
+  const _BorderButton({Key key, @required this.text, @required this.onTap})
+      : super(key: key);
 
   final String text;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -402,9 +496,7 @@ class _BorderButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
+      onPressed: onTap,
       child: Text(text),
     );
   }
