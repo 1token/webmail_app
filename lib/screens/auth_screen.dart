@@ -192,7 +192,7 @@ class __MainViewState extends State<_MainView> {
                   _UsernameInput(
                     authMode: widget.authMode,
                     onAuthUsernameChange: (String val) {
-                      setState(() => _authData['email'] = val);
+                      _authData['email'] = val;
                     },
                     maxWidth: desktopMaxWidth,
                     usernameController: widget.usernameController,
@@ -200,7 +200,7 @@ class __MainViewState extends State<_MainView> {
                   const SizedBox(height: 12),
                   _PasswordInput(
                     onAuthPasswordChange: (String val) {
-                      setState(() => _authData['password'] = val);
+                      _authData['password'] = val;
                     },
                     maxWidth: desktopMaxWidth,
                     passwordController: widget.passwordController,
@@ -240,14 +240,14 @@ class __MainViewState extends State<_MainView> {
                   _UsernameInput(
                     authMode: widget.authMode,
                     onAuthUsernameChange: (String val) {
-                      setState(() => _authData['email'] = val);
+                      _authData['email'] = val;
                     },
                     usernameController: widget.usernameController,
                   ),
                   const SizedBox(height: 12),
                   _PasswordInput(
                     onAuthPasswordChange: (String val) {
-                      setState(() => _authData['password'] = val);
+                      _authData['password'] = val;
                     },
                     passwordController: widget.passwordController,
                   ),
