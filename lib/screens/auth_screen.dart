@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
+import 'package:webmail_app/models/http_exception.dart';
+import 'package:webmail_app/providers/auth.dart';
 import 'package:webmail_app/colors.dart';
 
 import 'package:webmail_app/utils/gallery_options.dart';
@@ -99,8 +102,31 @@ class _MainView extends StatefulWidget {
 class __MainViewState extends State<_MainView> {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
+  var _isLoading = false;
+  Map<String, String> _authData = {
+    'email': '',
+    'password': '',
+  };
+
   void _login(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('An Error Occurred!'),
+          content: Text(message),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Okay'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ],
+        ));
   }
 
   @override
@@ -113,6 +139,46 @@ class __MainViewState extends State<_MainView> {
         // Invalid!
         return;
       }
+      _formKey.currentState.save();
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        if (widget.authMode == AuthMode.Login) {
+          // Log user in
+          await Provider.of<Auth>(context, listen: false).login(
+            _authData['email'],
+            _authData['password'],
+          );
+        } else {
+          // Sign user up
+          await Provider.of<Auth>(context, listen: false).signup(
+            _authData['email'],
+            _authData['password'],
+          );
+        }
+      } on HttpException catch (error) {
+        var errorMessage = 'Authentication failed';
+        if (error.toString().contains('EMAIL_EXISTS')) {
+          errorMessage = 'This email address is already in use.';
+        } else if (error.toString().contains('INVALID_EMAIL')) {
+          errorMessage = 'This is not a valid email address.';
+        } else if (error.toString().contains('WEAK_PASSWORD')) {
+          errorMessage = 'This password is too weak.';
+        } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+          errorMessage = 'Could not find a user with that email.';
+        } else if (error.toString().contains('INVALID_PASSWORD')) {
+          errorMessage = 'Invalid password.';
+        }
+        _showErrorDialog(errorMessage);
+      } catch (error) {
+        const errorMessage = 'Could not authenticate you. Please try again later.';
+        _showErrorDialog(errorMessage);
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
     }
 
     if (isDesktop) {
@@ -125,11 +191,17 @@ class __MainViewState extends State<_MainView> {
                 children: <Widget>[
                   _UsernameInput(
                     authMode: widget.authMode,
+                    onAuthUsernameChange: (String val) {
+                      setState(() => _authData['email'] = val);
+                    },
                     maxWidth: desktopMaxWidth,
                     usernameController: widget.usernameController,
                   ),
                   const SizedBox(height: 12),
                   _PasswordInput(
+                    onAuthPasswordChange: (String val) {
+                      setState(() => _authData['password'] = val);
+                    },
                     maxWidth: desktopMaxWidth,
                     passwordController: widget.passwordController,
                   ),
@@ -167,10 +239,16 @@ class __MainViewState extends State<_MainView> {
                 children: <Widget>[
                   _UsernameInput(
                     authMode: widget.authMode,
+                    onAuthUsernameChange: (String val) {
+                      setState(() => _authData['email'] = val);
+                    },
                     usernameController: widget.usernameController,
                   ),
                   const SizedBox(height: 12),
                   _PasswordInput(
+                    onAuthPasswordChange: (String val) {
+                      setState(() => _authData['password'] = val);
+                    },
                     passwordController: widget.passwordController,
                   ),
                   if (widget.authMode == AuthMode.Signup) ...[
@@ -309,11 +387,13 @@ class _UsernameInput extends StatelessWidget {
   const _UsernameInput({
     Key key,
     this.authMode,
+    this.onAuthUsernameChange,
     this.maxWidth,
     this.usernameController,
   }) : super(key: key);
 
   final AuthMode authMode;
+  final Function(String) onAuthUsernameChange;
   final double maxWidth;
   final TextEditingController usernameController;
 
@@ -324,7 +404,7 @@ class _UsernameInput extends StatelessWidget {
       child: Container(
         constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
         child: TextFormField(
-          autofocus: true,
+          // autofocus: true,
           controller: usernameController,
           decoration: InputDecoration(
             labelText: GalleryLocalizations.of(context).rallyLoginUsername,
@@ -338,6 +418,9 @@ class _UsernameInput extends StatelessWidget {
                       .demoTextFieldSignupEmailAddress;
             }
           },
+          onSaved: (value) {
+            onAuthUsernameChange(value);
+          },
         ),
       ),
     );
@@ -347,10 +430,12 @@ class _UsernameInput extends StatelessWidget {
 class _PasswordInput extends StatelessWidget {
   const _PasswordInput({
     Key key,
+    this.onAuthPasswordChange,
     this.maxWidth,
     this.passwordController,
   }) : super(key: key);
 
+  final Function(String) onAuthPasswordChange;
   final double maxWidth;
   final TextEditingController passwordController;
 
@@ -370,6 +455,9 @@ class _PasswordInput extends StatelessWidget {
               return GalleryLocalizations.of(context)
                   .demoTextFieldPasswordMustBeLonger;
             }
+          },
+          onSaved: (value) {
+            onAuthPasswordChange(value);
           },
           obscureText: true,
         ),

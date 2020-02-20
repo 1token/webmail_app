@@ -1,11 +1,18 @@
 import 'dart:convert' show json;
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:webmail_app/utils/gallery_options.dart';
 import 'package:webmail_app/utils/gallery_localizations.dart';
 import 'package:webmail_app/utils/focus_traversal_policy.dart';
+
+import 'package:webmail_app/helpers/custom_route.dart';
+import 'package:webmail_app/providers/auth.dart';
+
 import 'package:webmail_app/screens/home_screen.dart';
 import 'package:webmail_app/screens/auth_screen.dart';
+import 'package:webmail_app/screens/splash_screen.dart';
 
 import 'package:webmail_app/colors.dart';
 
@@ -30,13 +37,47 @@ class WebmailApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Auth()),
+      ],
+      child: Consumer<Auth>(
+        builder: (ctx, auth, _) => MaterialApp(
+          navigatorKey: navigatorKey,
+          title: 'Webmail',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: MaterialColor(0xFF83A4D6, StarterColors.matColor),
+          ),
+          localizationsDelegates: GalleryLocalizations.localizationsDelegates,
+          supportedLocales: GalleryLocalizations.supportedLocales,
+          locale: Locale('sk', 'SK'),
+          home: auth.isAuth
+              ? HomeScreen()
+              : FutureBuilder(
+            future: auth.tryAutoLogin(),
+            builder: (ctx, authResultSnapShot) =>
+            authResultSnapShot.connectionState == ConnectionState.waiting ? SplashScreen() : AuthScreen(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*class WebmailApp extends StatelessWidget {
+  const WebmailApp({Key key, this.navigatorKey}) : super(key: key);
+
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
-      title: 'Starter',
+      title: 'Webmail',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch:
-        MaterialColor(0xFF83A4D6, StarterColors.matColor),
+        primarySwatch: MaterialColor(0xFF83A4D6, StarterColors.matColor),
       ),
       localizationsDelegates: GalleryLocalizations.localizationsDelegates,
       supportedLocales: GalleryLocalizations.supportedLocales,
@@ -48,7 +89,7 @@ class WebmailApp extends StatelessWidget {
       },
     );
   }
-}
+}*/
 
 /*class WebmailApp extends StatelessWidget {
   // This widget is the root of your application.
