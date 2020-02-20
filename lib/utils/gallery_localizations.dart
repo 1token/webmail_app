@@ -1303,6 +1303,13 @@ class GalleryLocalizations {
         desc: r'Title for the profile tab in the bottom tab bar demo.');
   }
 
+  String get authAppBarProfileAvatar {
+    return Intl.message('Profile',
+        locale: _localeName,
+        name: 'authAppBarProfileAvatar',
+        desc: r'Title for the profile avatar in top bar demo.');
+  }
+
   String get dataTableColumnCalcium {
     return Intl.message('Calcium (%)',
         locale: _localeName,

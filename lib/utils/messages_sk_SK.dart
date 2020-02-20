@@ -380,8 +380,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Show Alert"),
         "cupertinoTabBarChatTab": MessageLookupByLibrary.simpleMessage("Chat"),
         "cupertinoTabBarHomeTab": MessageLookupByLibrary.simpleMessage("Home"),
-        "cupertinoTabBarProfileTab":
-            MessageLookupByLibrary.simpleMessage("Profile"),
+    "cupertinoTabBarProfileTab":
+    MessageLookupByLibrary.simpleMessage("Profile"),
+    "authAppBarProfileAvatar":
+    MessageLookupByLibrary.simpleMessage("Profil"),
         "dataTableColumnCalcium":
             MessageLookupByLibrary.simpleMessage("Calcium (%)"),
         "dataTableColumnCalories":
@@ -1067,7 +1069,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rallySettingsPersonalInformation":
             MessageLookupByLibrary.simpleMessage("Personal Information"),
         "rallySettingsSignOut":
-            MessageLookupByLibrary.simpleMessage("Sign out"),
+            MessageLookupByLibrary.simpleMessage("Odhlásiť"),
         "rallySettingsTaxDocuments":
             MessageLookupByLibrary.simpleMessage("Tax Documents"),
         "rallyTitleAccounts": MessageLookupByLibrary.simpleMessage("ǓČTY"),
@@ -1248,7 +1250,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "starterAppTooltipFavorite":
             MessageLookupByLibrary.simpleMessage("Favorite"),
         "starterAppTooltipSearch":
-            MessageLookupByLibrary.simpleMessage("Search"),
+            MessageLookupByLibrary.simpleMessage("Hľadaj"),
         "starterAppTooltipShare":
             MessageLookupByLibrary.simpleMessage("Share"),
         "starterGoogleSigninButton":

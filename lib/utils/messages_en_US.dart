@@ -380,8 +380,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Show Alert"),
         "cupertinoTabBarChatTab": MessageLookupByLibrary.simpleMessage("Chat"),
         "cupertinoTabBarHomeTab": MessageLookupByLibrary.simpleMessage("Home"),
-        "cupertinoTabBarProfileTab":
-            MessageLookupByLibrary.simpleMessage("Profile"),
+    "cupertinoTabBarProfileTab":
+    MessageLookupByLibrary.simpleMessage("Profile"),
+    "authAppBarProfileAvatar":
+    MessageLookupByLibrary.simpleMessage("Profile"),
         "dataTableColumnCalcium":
             MessageLookupByLibrary.simpleMessage("Calcium (%)"),
         "dataTableColumnCalories":
