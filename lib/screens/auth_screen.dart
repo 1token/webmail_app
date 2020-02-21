@@ -120,7 +120,7 @@ class __MainViewState extends State<_MainView> {
           content: Text(message),
           actions: <Widget>[
             FlatButton(
-              child: Text('Okay'),
+              child: Text('Close'),
               onPressed: () {
                 Navigator.of(ctx).pop();
               },
